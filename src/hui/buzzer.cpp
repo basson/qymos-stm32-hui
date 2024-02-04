@@ -1,4 +1,4 @@
-#include "../include/buzzer.hpp"
+#include "../include/hui/buzzer.hpp"
 
 namespace qymos
 {

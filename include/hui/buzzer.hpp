@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lib/qymos-stm32-driver-buzzer/buzzer.hpp"
+#include "drivers/buzzer.hpp"
 
 namespace qymos
 {
