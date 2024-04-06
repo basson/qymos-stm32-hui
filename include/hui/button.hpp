@@ -19,7 +19,7 @@ namespace qymos
 
             /*This is private variable, do not use*/
             volatile bool _isIrq = false;
-            uint16_t _elapsedIrq = 0;
+            volatile uint32_t _elapsedIrq = 0;
             Button *_next = nullptr;
         };
 

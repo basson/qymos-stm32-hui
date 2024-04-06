@@ -13,7 +13,7 @@ namespace qymos
         class ButtonIrq
         {
         private:
-            static volatile uint32_t _irqInputMs;
+            static volatile uint32_t _noizeFilterMs;
             static Button *_first;
         public:
             void Process();

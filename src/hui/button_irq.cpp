@@ -4,12 +4,16 @@ namespace qymos
 {
     namespace hui
     {
-        volatile uint32_t ButtonIrq::_irqInputMs = 0;
+        volatile uint32_t ButtonIrq::_noizeFilterMs = 0;
         Button *ButtonIrq::_first = nullptr;
 
         void ButtonIrq::Process()
         {
-            Button *button = _first;
+            if(HAL_GetTick() - _noizeFilterMs <= 50)
+                return;
+            _noizeFilterMs = HAL_GetTick();
+            
+            struct Button *button = _first;
             while (button != nullptr)
             {
                 if (button->_isIrq && HAL_GPIO_ReadPin(button->port, button->pin) == button->edge)
@@ -18,7 +22,6 @@ namespace qymos
                         button->OnClick(button->port, button->pin, (bool)HAL_GPIO_ReadPin(button->port, button->pin));
                     else
                         button->OnLongClick(button->port, button->pin, (bool)HAL_GPIO_ReadPin(button->port, button->pin));
-
                     button->_elapsedIrq = 0;
                     button->_isIrq = false;
                 }
@@ -31,9 +34,11 @@ namespace qymos
             if (_first == nullptr)
             {
                 _first = button;
+                _first->_next = nullptr;
                 return;
             }
-            Button *next = _first;
+            
+            struct Button *next = _first;
             while (next->_next != nullptr)
                 next = next->_next;
             next->_next = button;
@@ -48,6 +53,7 @@ namespace qymos
                 {
                     button->_elapsedIrq = HAL_GetTick();
                     button->_isIrq = true;
+                    break;
                 }
                 button = button->_next;
             }
